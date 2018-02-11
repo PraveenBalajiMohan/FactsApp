@@ -46,7 +46,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Singleton
     Retrofit providesRetrofit(@Named("baseUrl") String hostUrl) {
         // provides retrofit object for the service.
         return new Retrofit.Builder()

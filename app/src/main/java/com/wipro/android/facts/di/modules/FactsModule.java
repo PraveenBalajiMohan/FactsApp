@@ -32,7 +32,6 @@ public class FactsModule {
     }
 
     @Provides
-    @PerActivity
     FactsApiService providesFactsApiService(Retrofit retrofit) {
         // Returns retrofit service object
         return retrofit.create(FactsApiService.class);
