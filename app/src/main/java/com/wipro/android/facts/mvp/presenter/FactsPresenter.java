@@ -9,6 +9,7 @@ import com.wipro.android.facts.api.FactsApiService;
 import com.wipro.android.facts.base.BasePresenter;
 import com.wipro.android.facts.mvp.model.FactItem;
 import com.wipro.android.facts.mvp.model.FactsData;
+import com.wipro.android.facts.mvp.model.FactsStorage;
 import com.wipro.android.facts.mvp.view.FactsView;
 import com.wipro.android.facts.utils.NetworkUtils;
 
@@ -34,6 +35,7 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
     // Dagger supplied dependencies
     @Inject protected FactsApiService factsApiService;
     @Inject Context context;
+    @Inject FactsStorage factsStorage;
 
     // Constructor should be marked Injected if we are not using providers
     @Inject
@@ -42,8 +44,16 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
 
     /**
      * Call this from associated view to fetch facts data
+     * @param doRefresh pass true to reload latest data
      */
-    public void fetchFactsData(){
+    public void fetchFactsData(boolean doRefresh){
+        if(factsStorage.getFactsData() != null && !doRefresh){
+            // if data available in storage object and not a refresh call then display cached data.
+            filterAndDelegateResults(factsStorage.getFactsData());
+            return;
+        }
+
+        // either new call to service or refresh call
         if(NetworkUtils.isNetAvailable(context)) {
             // if network available make a service call to retrieve facts data using retrofit.
             Observable<Response<FactsData>> observable = factsApiService.getFacts();
@@ -95,6 +105,7 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
 
         if (factsDataResponse.code() == CODE_SUCCESS) {
             if (factsDataResponse.body() != null) {
+                factsStorage.setFactsData(factsDataResponse.body());
                 //  Result success, process the response.
                 filterAndDelegateResults(factsDataResponse.body());
             } else {

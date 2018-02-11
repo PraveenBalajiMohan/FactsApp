@@ -73,12 +73,12 @@ public class FactsActivity extends BaseActivity implements FactsView {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                fetchFactsData();
+                fetchFactsData(true);
             }
         });
 
-        // First time loading the data
-        fetchFactsData();
+        // First time loading the data so pass 'false'
+        fetchFactsData(false);
     }
 
     @Override
@@ -123,15 +123,16 @@ public class FactsActivity extends BaseActivity implements FactsView {
     public void onRetryButtonClick() {
         retry.setEnabled(false);
         retryPlaceHolder.setText(R.string.please_wait);
-        fetchFactsData();
+        fetchFactsData(true);
     }
 
     /**
      * Call presenter to fetch facts data
+     * @param doRefresh true to refresh, false otherwise.
      */
-    private void fetchFactsData() {
+    private void fetchFactsData(boolean doRefresh) {
         mSwipeRefreshLayout.setRefreshing(true);
-        presenter.fetchFactsData();
+        presenter.fetchFactsData(doRefresh);
     }
 
     @Override

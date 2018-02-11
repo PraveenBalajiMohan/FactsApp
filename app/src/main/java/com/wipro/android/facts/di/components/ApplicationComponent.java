@@ -3,6 +3,7 @@ package com.wipro.android.facts.di.components;
 import android.content.Context;
 
 import com.wipro.android.facts.di.modules.ApplicationModule;
+import com.wipro.android.facts.mvp.model.FactsStorage;
 
 import javax.inject.Singleton;
 
@@ -22,5 +23,7 @@ public interface ApplicationComponent {
     Context exposeContext();
 
     Retrofit exposeRetrofit();
+
+    FactsStorage exposeFactsStorage();
 
 }

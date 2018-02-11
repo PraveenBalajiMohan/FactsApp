@@ -3,6 +3,7 @@ package com.wipro.android.facts.di.modules;
 import android.content.Context;
 
 import com.wipro.android.facts.BuildConfig;
+import com.wipro.android.facts.mvp.model.FactsStorage;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -54,6 +55,15 @@ public class ApplicationModule {
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
+
+    @Provides
+    @Singleton
+    FactsStorage providesFactsStorage(){
+        // provides singleton data storage object to persist in memory.
+        return new FactsStorage();
+    }
+
+
 
 
 }
