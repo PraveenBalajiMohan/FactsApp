@@ -49,9 +49,12 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
     public void fetchFactsData(boolean doRefresh){
         if(factsStorage.getFactsData() != null && !doRefresh){
             // if data available in storage object and not a refresh call then display cached data.
+            Log.i(TAG,"Retrieving data from storage.");
             filterAndDelegateResults(factsStorage.getFactsData());
             return;
         }
+
+        Log.i(TAG,"Retrieving data from source.");
 
         // either new call to service or refresh call
         if(NetworkUtils.isNetAvailable(context)) {
@@ -61,6 +64,7 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
             // Binds observable with observer
             subscribe(observable, this);
         } else {
+            Log.w(TAG,"Network not available.");
             // Network not available; Display error message.
             getView().showError(R.string.error_check_internet_connection);
         }
@@ -82,6 +86,7 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
         }
 
         // delegates facts data to display
+        Log.i(TAG,"Show title and items");
         getView().showFactsList(factsData.factItems);
         getView().showFactsTitle(factsData.title);
     }
@@ -91,29 +96,34 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
      */
     public void onDetach(){
         super.detach();
+        Log.i(TAG,"Detaching the presenter to clear disposables.");
     }
 
 
     @Override
     public void onSubscribe(Disposable d) {
+        Log.i(TAG,"Observer: onSubscribe.");
         // add subscription to base presenter to manage effectively with lifecycle events.
         addSubscription(d);
     }
 
     @Override
     public void onNext(Response<FactsData> factsDataResponse) {
-
+        Log.i(TAG,"Observer: onNext");
         if (factsDataResponse.code() == CODE_SUCCESS) {
+            Log.i(TAG,"Observer: onNext: "+CODE_SUCCESS);
             if (factsDataResponse.body() != null) {
+                Log.i(TAG,"Observer: onNext: response received.");
                 factsStorage.setFactsData(factsDataResponse.body());
                 //  Result success, process the response.
                 filterAndDelegateResults(factsDataResponse.body());
             } else {
-                // Null data received; hence technical error.
-                getView().showTechnicalError();
+                Log.w(TAG,"Observer: onNext: null response received.");
+                // Null data received; so allow refresh.
+                getView().showError(R.string.error_no_data);
             }
         } else {
-
+            Log.w(TAG,"Observer: onNext: non success status code: "+factsDataResponse.code());
             // Non success status code received from server; hence technical error.
             getView().showTechnicalError();
 
@@ -122,12 +132,13 @@ public class FactsPresenter extends BasePresenter<FactsView>  implements Observe
 
     @Override
     public void onError(Throwable e) {
-        // Most probable host not rechable or similar kind; Display generic try again message
-        getView().showError(R.string.error_check_internet_connection);
+        // Most probable host not reachable or similar kind; Display generic try again message
+        getView().showError(R.string.error_not_reachable);
         Log.e(TAG,e.getMessage(),e);
     }
 
     @Override
     public void onComplete() {
+        Log.i(TAG,"Observer: onComplete");
     }
 }

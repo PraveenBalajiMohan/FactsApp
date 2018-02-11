@@ -41,9 +41,13 @@ android {
     // Module dependencies goes here
     dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+        // Espresso - For UI unit tests
         androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
             exclude group: 'com.android.support', module: 'support-annotations'
         })
+
+        // Junit - java unit tests
         testImplementation 'junit:junit:4.12'
 
         implementation 'com.android.support:support-v4:27.0.2'

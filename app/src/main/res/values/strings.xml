@@ -3,5 +3,7 @@
     <string name="retry">Retry</string>
     <string name="please_wait">Please wait…</string>
     <string name="error_check_internet_connection">Please check your internet connection.</string>
-    <string name="error_technical">Technical issue.   Please contact the application provider.</string>
+    <string name="error_technical">Technical issue!\n Please contact the application provider.</string>
+    <string name="error_no_data">No feeds to dislpay! \n Please try again later.</string>
+    <string name="error_not_reachable">Server not reachable! \n Please check your proxy. </string>
 </resources>

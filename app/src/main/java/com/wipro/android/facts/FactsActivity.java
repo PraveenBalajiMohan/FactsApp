@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wipro.android.facts.adapters.FactsListViewAdapter;
 import com.wipro.android.facts.base.BaseActivity;
@@ -86,10 +87,10 @@ public class FactsActivity extends BaseActivity implements FactsView {
         mSwipeRefreshLayout.setRefreshing(false);
         retry.setVisibility(View.VISIBLE);
         retry.setEnabled(true);
-        if(id != 0){
-            retryPlaceHolder.setText(id);
-        } else{
-            retryPlaceHolder.setText(R.string.error_check_internet_connection);
+        retryPlaceHolder.setText(id);
+
+        if(id == R.string.error_check_internet_connection){
+            Toast.makeText(this,R.string.error_check_internet_connection,Toast.LENGTH_LONG).show();
         }
     }
 
